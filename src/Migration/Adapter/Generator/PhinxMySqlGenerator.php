@@ -67,6 +67,8 @@ class PhinxMySqlGenerator
         $default = [
             // Experimental foreign key support.
             'foreign_keys' => false,
+            // Treat defaults as expressions
+            'mariadb_default_as_expr' => false,
             // Default migration table name
             'default_migration_table' => 'phinxlog',
         ];
@@ -738,7 +740,12 @@ class PhinxMySqlGenerator
     protected function getPhinxColumnOptionsDefault($attributes, $columnData)
     {
         if ($columnData['COLUMN_DEFAULT'] !== null) {
-            $default = is_int($columnData['COLUMN_DEFAULT']) ? $columnData['COLUMN_DEFAULT'] : '"' . $columnData['COLUMN_DEFAULT'] . '"';
+            if(!$this->options['mariadb_default_as_expr']) {
+                $default = is_int($columnData['COLUMN_DEFAULT']) ? $columnData['COLUMN_DEFAULT'] : '"' . $columnData['COLUMN_DEFAULT'] . '"';
+            } else {
+                $default = $columnData['COLUMN_DEFAULT'];
+            }
+
             $attributes[] = '\'default\' => ' . $default;
         }
 

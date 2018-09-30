@@ -103,6 +103,7 @@ class GenerateCommand extends AbstractCommand
         $pdo = $this->getPdo($manager, $environment);
 
         $foreignKeys = $config->offsetExists('foreign_keys') ? $config->offsetGet('foreign_keys') : false;
+        $mariaNewDefaultSchema = $config->offsetExists('mariadb_default_as_expr') ? $config->offsetGet('mariadb_default_as_expr') : false;
 
         $defaultMigrationTable = isset($envOptions['default_migration_table']) ? $envOptions['default_migration_table'] : 'phinxlog';
 
@@ -121,6 +122,7 @@ class GenerateCommand extends AbstractCommand
             'name' => $name,
             'overwrite' => $overwrite,
             'mark_migration' => true,
+            'mariadb_default_as_expr' => $mariaNewDefaultSchema,
             'default_migration_table' => $defaultMigrationTable,
         ];
 
